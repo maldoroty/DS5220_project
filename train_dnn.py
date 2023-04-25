@@ -24,26 +24,31 @@ if __name__ == "__main__":
 
     train_data_loader = DataLoader(dataset=train_dataset, num_workers=4, batch_size=BATCH_SIZE, shuffle=True)
     eval_data_loader = DataLoader(dataset=eval_dataset, num_workers=4, batch_size=BATCH_SIZE, shuffle=False)
-    
+
     model = nn.Sequential(
         nn.Flatten(),
-        nn.Linear(3072, 512),
+        nn.Linear(3*32*32, 1024),
         nn.ReLU(),
+        nn.Dropout(p=0.5),
+        nn.Linear(1024, 512),
+        nn.ReLU(),
+        nn.Dropout(p=0.5),
         nn.Linear(512, 256),
         nn.ReLU(),
+        nn.Dropout(p=0.5),
         nn.Linear(256, 128),
         nn.ReLU(),
+        nn.Dropout(p=0.5),
         nn.Linear(128, 64),
         nn.ReLU(),
-        nn.Linear(64, 10),
-        nn.Sigmoid())
+        nn.Linear(64, 10))
     
     if exists('model_weights_dnn_final.pth'):
         model.load_state_dict(torch.load('model_weights_dnn_final.pth'))
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     loss_function = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.Adam(model.parameters(), lr = 0.001)
 
     model.train()
     model.to(device)
