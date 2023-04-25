@@ -80,8 +80,6 @@ if __name__ == "__main__":
 
     train_data_loader = DataLoader(dataset=train_dataset, num_workers=4, batch_size=BATCH_SIZE, shuffle=True)
     eval_data_loader = DataLoader(dataset=eval_dataset, num_workers=4, batch_size=BATCH_SIZE, shuffle=False)
-
-    #model = resnet18(weights = None, num_classes = 10)
     
     model = nn.Sequential(
         nn.Conv2d(3, 32, kernel_size=3, padding=1),
